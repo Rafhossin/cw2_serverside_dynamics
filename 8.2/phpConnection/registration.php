@@ -1,5 +1,4 @@
 <?php
-
 header("Access-Control-Allow-Origin: *");
 
 // Connect to central database
@@ -17,8 +16,8 @@ $patient_record = $check_nhs_number->fetch(PDO::FETCH_ASSOC);
 // Check if patient record exists in central database
 if ($patient_record) {
     // Get patient email and password from POST request
-    $patient_email = $_POST['patientEmail'];
-    $patient_password = $_POST['patientPassword'];
+    $patient_email = $_POST['email'];
+    $patient_password = $_POST['password'];
 
     // Connect to local database
     $local_db = new PDO('sqlite:GpSurgery.db');
