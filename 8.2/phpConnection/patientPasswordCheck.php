@@ -4,19 +4,25 @@ $local_db = new PDO('sqlite:GpSurgery.db');
 $password = $_POST['password'];
 $email = $_POST['emailAddress'];
 
-// Check if email and password match in database
-$check_email_password = $local_db->prepare("SELECT NHSNumber FROM LocalPatient WHERE PatientEmail = :email AND PatientPassword = :password");
-$check_email_password->bindParam(':email', $email);
-$check_email_password->bindParam(':password', $password);
-$check_email_password->execute();
+// Check if email exists in database
+$check_email = $local_db->prepare("SELECT * FROM LocalPatient WHERE PatientEmail = :email");
+$check_email->bindParam(':email', $email);
+$check_email->execute();
 
-$nhs_number_result = $check_email_password->fetchColumn();
+$patient_record = $check_email->fetch(PDO::FETCH_ASSOC);
 
-if ($nhs_number_result) {
-    // Return true with the NHS number
-    echo json_encode(array('success' => true, 'nhsNumber' => $nhs_number_result));
+if ($patient_record) {
+    // Verify password
+    if (password_verify($password, $patient_record['PatientPassword'])) {
+        // Return true with the NHS number
+        echo json_encode(array('success' => true, 'nhsNumber' => $patient_record['NHSNumber']));
+    } else {
+        // Return false
+        echo json_encode(array('success' => false));
+    }
 } else {
     // Return false
     echo json_encode(array('success' => false));
 }
+
 ?>

@@ -6,6 +6,11 @@ $central_db = new PDO('sqlite:vaccines.db');
 
 // Get the NHS number from the AJAX POST request
 $nhs_number = $_POST['nhsNumber'];
+// Get patient email and password from POST request
+$patient_email = $_POST['email'];
+$patient_password = $_POST['password'];
+// Hash the password
+$hashed_password = password_hash($patient_password, PASSWORD_DEFAULT);
 
 // Get patient record from central database
 $check_nhs_number = $central_db->prepare('SELECT * FROM patients WHERE NHSNumber = :nhs_number');
@@ -15,9 +20,6 @@ $patient_record = $check_nhs_number->fetch(PDO::FETCH_ASSOC);
 
 // Check if patient record exists in central database
 if ($patient_record) {
-    // Get patient email and password from POST request
-    $patient_email = $_POST['email'];
-    $patient_password = $_POST['password'];
 
     // Connect to local database
     $local_db = new PDO('sqlite:GpSurgery.db');
@@ -31,23 +33,9 @@ if ($patient_record) {
     $insert_local_patient->bindParam(':gendercode', $patient_record['GenderCode']);
     $insert_local_patient->bindParam(':postcode', $patient_record['Postcode']);
     $insert_local_patient->bindParam(':patient_email', $patient_email);
-    $insert_local_patient->bindParam(':patient_password', $patient_password);
+    $insert_local_patient->bindParam(':patient_password', $hashed_password);
     $insert_local_patient->execute();
 
-    // Return the patient information as a JSON object
-    $patient_info = array(
-        'nhsNumber' => $patient_record['NHSNumber'],
-        'forename' => $patient_record['Forename'],
-        'surname' => $patient_record['Surname'],
-        'personDOB' => $patient_record['PersonDOB'],
-        'genderCode' => $patient_record['GenderCode'],
-        'postcode' => $patient_record['Postcode'],
-        'patientEmail' => $patient_email,
-        'patientPassword' => $patient_password
-    );
-
-    echo json_encode($patient_info);
-} else {
-    echo "NHSNumber does not exist in central database";
+    echo json_encode(array('success' => true));
 }
 ?>
