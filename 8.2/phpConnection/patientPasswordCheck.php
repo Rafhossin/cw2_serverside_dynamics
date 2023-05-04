@@ -15,7 +15,7 @@ if ($patient_record) {
     // Verify password
     if (password_verify($password, $patient_record['PatientPassword'])) {
         // Return true with the NHS number
-        echo json_encode(array('success' => true, 'nhsNumber' => $patient_record['NHSNumber']));
+        echo json_encode(array('success' => true, 'NHSNumber' => $patient_record['NHSNumber']));
     } else {
         // Return false
         echo json_encode(array('success' => false));
