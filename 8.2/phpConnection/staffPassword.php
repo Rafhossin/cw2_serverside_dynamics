@@ -6,22 +6,34 @@ $email = $_POST['emailAddress'];
 $role = $_POST['role'];
 
 if ($role == "doctor") {
-  $check_email_password = $local_db->prepare("SELECT DoctorId FROM Doctor WHERE DoctorEmail = :email AND DoctorPassword = :password");
+    $sql = "SELECT DoctorId, DoctorPassword FROM Doctor WHERE DoctorEmail = :email";
 } else if ($role == "receptionist") {
-  $check_email_password = $local_db->prepare("SELECT ReceptionistId FROM Receptionist WHERE ReceptionistEmail = :email AND ReceptionistPassword = :password");
+    $sql = "SELECT ReceptionistId, ReceptionistPassword FROM Receptionist WHERE ReceptionistEmail = :email";
+} else {
+    // Invalid role, return an error message
+    echo json_encode(array('success' => false, 'message' => 'Invalid role'));
+    exit;
 }
 
-$check_email_password->bindParam(':email', $email);
-$check_email_password->bindParam(':password', $password);
-$check_email_password->execute();
+$stmt = $local_db->prepare($sql);
+$stmt->bindParam(':email', $email);
+$stmt->execute();
 
-$id_result = $check_email_password->fetchColumn();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($id_result) {
-  // Return true with the doctor or receptionist ID
-  echo json_encode(array('success' => true, 'id' => $id_result));
+if ($result) {
+    $stored_password = ($role == "doctor") ? $result['DoctorPassword'] : $result['ReceptionistPassword'];
+    $id_result = ($role == "doctor") ? $result['DoctorId'] : $result['ReceptionistId'];
+
+    if (password_verify($password, $stored_password)) {
+        // Return true with the doctor or receptionist ID
+        echo json_encode(array('success' => true, 'id' => $id_result));
+    } else {
+        // Return false
+        echo json_encode(array('success' => false));
+    }
 } else {
-  // Return false
-  echo json_encode(array('success' => false));
+    // Return false
+    echo json_encode(array('success' => false));
 }
 ?>
