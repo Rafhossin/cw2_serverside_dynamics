@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 header("Access-Control-Allow-Origin: *");
 $local_db = new PDO('sqlite:GpSurgery.db');
 $password = $_POST['password'];
@@ -24,5 +24,4 @@ if ($patient_record) {
     // Return false
     echo json_encode(array('success' => false));
 }
-
 ?>
