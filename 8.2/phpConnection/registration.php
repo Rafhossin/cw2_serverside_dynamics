@@ -36,6 +36,19 @@ if ($patient_record) {
     $insert_local_patient->bindParam(':patient_password', $hashed_password);
     $insert_local_patient->execute();
 
+
+    // // Fetch the required columns from the vaccine table in the central database
+    // $query = "SELECT NHSNumber, DoseNo, VaccinationDate, VaccineManufacturer, DiseaseTargeted, VaccineType, Product, VaccineBatchNumber, CountryOfVaccination, Authority, Site, TotalSeriesOfDoses, DisplayName, SnomedCode, DateEntered, ProcedureCode, Booster FROM vaccine";
+    // $statement = $central_db->query($query);
+
+    // // Insert the fetched rows into the LocalPatientVaccination table in the local database
+    // $insert_query = "INSERT INTO LocalPatientVaccination (NHSNumber, DoseNo, VaccinationDate, VaccineManufacturer, DiseaseTargeted, VaccineType, Product, VaccineBatchNumber, CountryOfVaccination, Authority, Site, TotalSeriesOfDoses, DisplayName, SnomedCode, DateEntered, ProcedureCode, Booster) VALUES (:nhs_number, :dose_no, :vaccination_date, :vaccine_manufacturer, :disease_targeted, :vaccine_type, :product, :vaccine_batch_number, :country_of_vaccination, :authority, :site, :total_series_of_doses, :display_name, :snomed_code, :date_entered, :procedure_code, :booster)";
+    // $insert_statement = $local_db->prepare($insert_query);
+
+    // while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    //     $insert_statement->execute($row);
+    // }
+
     echo json_encode(array('success' => true));
 }
 ?>
