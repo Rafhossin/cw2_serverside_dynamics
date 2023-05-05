@@ -5,8 +5,13 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$NHSNumber = '94648186381'; // Replace this with the actual patient NHS Number
-// $NHSNumber = $request['NHSNumber'];
+// Read the input data and decode the JSON
+$inputJSON = file_get_contents('php://input');
+$inputData = json_decode($inputJSON, true);
+
+// Get the NHSNumber from the input data
+$NHSNumber = isset($inputData['NHSNumber']) ? $inputData['NHSNumber'] : null;
+
 $response = ["message" => "", "appointments" => []];
 
 if (!empty($NHSNumber)) {
@@ -22,7 +27,7 @@ if (!empty($NHSNumber)) {
     $query = "SELECT AppointmentDate, AppointmentTime FROM GPAppointment WHERE NHSNumber = :NHSNumber";
     $stmt = $database->prepare($query);
 
-    $stmt->bindParam(':NHSNumber', $NHSNumber);
+    $stmt->bindValue(':NHSNumber', $NHSNumber, SQLITE3_TEXT);
 
     $result = $stmt->execute();
     $appointments = [];
