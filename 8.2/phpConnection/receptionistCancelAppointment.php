@@ -1,30 +1,26 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+$local_db = new PDO('sqlite:GpSurgery.db');
 
-$appointmentNo = isset($_POST['AppointmentNo']) ? $_POST['AppointmentNo'] : '';
-$NHSNumber = isset($_POST['NHSNumber']) ? $_POST['NHSNumber'] : '';
+$appointmentNo = $_POST['AppointmentNo'];
 
-if (!empty($appointmentNo) && !empty($NHSNumber)) {
-    $database = new SQLite3('GpSurgery.db');
+// Check if the appointment exists
+$check_appointment = $local_db->prepare("SELECT * FROM Appointments WHERE AppointmentNo = :appointmentNo");
+$check_appointment->bindParam(':appointmentNo', $appointmentNo);
+$check_appointment->execute();
 
-    $query = "DELETE FROM GPAppointment WHERE AppointmentNo = :appointmentNo AND NHSNumber = :NHSNumber";
-    $stmt = $database->prepare($query);
+$appointment = $check_appointment->fetch(PDO::FETCH_ASSOC);
 
-    $stmt->bindParam(':appointmentNo', $appointmentNo);
-    $stmt->bindParam(':NHSNumber', $NHSNumber);
+if ($appointment) {
+    // Delete the appointment
+    $delete_appointment = $local_db->prepare("DELETE FROM Appointments WHERE AppointmentNo = :appointmentNo");
+    $delete_appointment->bindParam(':appointmentNo', $appointmentNo);
+    $delete_appointment->execute();
 
-    if ($stmt->execute()) {
-        http_response_code(200);
-        echo json_encode(["message" => "Appointment was canceled successfully."]);
-    } else {
-        http_response_code(503);
-        echo json_encode(["message" => "Unable to cancel appointment."]);
-    }
+    // Return success response
+    echo json_encode(array('success' => true));
 } else {
-    http_response_code(400);
-    echo json_encode(["message" => "Unable to cancel appointment. Data is incomplete."]);
+    // Return error response
+    echo json_encode(array('success' => false, 'message' => 'Appointment not found.'));
 }
 ?>
