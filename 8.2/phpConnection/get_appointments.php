@@ -5,8 +5,8 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$NHSNumber = '92233359811'; // Replace this with the actual patient NHS Number
-
+$NHSNumber = '94648186381'; // Replace this with the actual patient NHS Number
+// $NHSNumber = $request['NHSNumber'];
 $response = ["message" => "", "appointments" => []];
 
 if (!empty($NHSNumber)) {
