@@ -18,21 +18,24 @@ if (!empty($NHSNumber) && !empty($updateField) && !empty($updateValue)) {
         exit();
     }
 
-    switch ($updateField) {
-        case 'Postcode':
-            $query = "UPDATE LocalPatient SET Postcode = :updateValue WHERE NHSNumber = :NHSNumber";
-            break;
-        case 'Email':
-            $query = "UPDATE LocalPatient SET PatientEmail = :updateValue WHERE NHSNumber = :NHSNumber";
-            break;
-        case 'Password':
-            $query = "UPDATE LocalPatient SET PatientPassword = :updateValue WHERE NHSNumber = :NHSNumber";
-            break;
-        default:
-            http_response_code(400);
-            $response["message"] = "Invalid update field";
-            echo json_encode($response);
-            exit();
+    if ($updateField === 'Password') {
+        $hashed_password = password_hash($updateValue, PASSWORD_DEFAULT);
+        $query = "UPDATE LocalPatient SET PatientPassword = :updateValue WHERE NHSNumber = :NHSNumber";
+        $updateValue = $hashed_password;
+    } else {
+        switch ($updateField) {
+            case 'Postcode':
+                $query = "UPDATE LocalPatient SET Postcode = :updateValue WHERE NHSNumber = :NHSNumber";
+                break;
+            case 'Email':
+                $query = "UPDATE LocalPatient SET PatientEmail = :updateValue WHERE NHSNumber = :NHSNumber";
+                break;
+            default:
+                http_response_code(400);
+                $response["message"] = "Invalid update field";
+                echo json_encode($response);
+                exit();
+        }
     }
 
     $stmt = $database->prepare($query);
