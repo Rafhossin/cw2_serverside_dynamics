@@ -17,16 +17,16 @@ $local_db = new PDO('sqlite:GpSurgery.db');
 
 
 //Inserting the doctor details from the above
-$doctorFirstName = "Martin";
-$doctorSurName = "Roach";
-$doctorEmail = "martin@yahoo.co.uk";
-$doctorPassword = "martin@2234";
+$doctorFirstName = "Gary";
+$doctorSurName = "Richard";
+$doctorEmail = "gRich@gmail.com";
+$doctorPassword = "greyCouch1234";
 
 // Hash the password
 $hashed_password = password_hash($doctorPassword, PASSWORD_DEFAULT);
 
 // Prepare the SQL statement
-$insertDrDetails = $local_db->prepare("INSERT INTO Doctor (DoctorFirstName, DoctorSurName, DoctorEmail, DoctorPassword) VALUES (?, ?, ?, ?)");
+$insertDrDetails = $local_db->prepare("INSERT INTO Receptionist (ReceptionistFirstName, ReceptionistSurName, ReceptionistEmail, ReceptionistPassword) VALUES (?, ?, ?, ?)");
 
 // Bind the parameters to the prepared statement
 $insertDrDetails->bindParam(1, $doctorFirstName);
@@ -42,7 +42,7 @@ if ($insertDrDetails->execute()) {
 }
 
 // Prepare the SQL statement
-$selectAllDoctors = $local_db->prepare("SELECT * FROM Doctor");
+$selectAllDoctors = $local_db->prepare("SELECT * FROM Receptionist");
 
 // Execute the prepared statement
 $selectAllDoctors->execute();
@@ -53,9 +53,9 @@ $doctors = $selectAllDoctors->fetchAll(PDO::FETCH_ASSOC);
 // Display all doctors
 foreach ($doctors as $doctor) {
    
-    echo "First Name: " . $doctor['DoctorFirstName'] . "<br>";
-    echo "Surname: " . $doctor['DoctorSurName'] . "<br>";
-    echo "Email: " . $doctor['DoctorEmail'] . "<br><br>";
+    echo "First Name: " . $doctor['ReceptionistFirstName'] . "<br>";
+    echo "Surname: " . $doctor['ReceptionistSurName'] . "<br>";
+    echo "Email: " . $doctor['ReceptionistEmail'] . "<br><br>";
 }
 
 
