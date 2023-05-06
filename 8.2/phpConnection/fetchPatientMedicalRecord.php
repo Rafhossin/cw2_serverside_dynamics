@@ -24,22 +24,20 @@ if ($patient_records) {
     $get_vaccine_records->execute();
     $vaccine_records = $get_vaccine_records->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($vaccine_records) {
-        echo json_encode(array('success' => true, 'patients' => $vaccine_records, 'message' => ''));
-    } else {
-        // Check if the patient exists in the LocalPatient table
-        $check_local_patient = $gpsurgery_db->prepare("SELECT * FROM LocalPatient WHERE NHSNumber = :nhsNumber");
-        $check_local_patient->bindParam(':nhsNumber', $nhsNumber);
-        $check_local_patient->execute();
-        $local_patient = $check_local_patient->fetch(PDO::FETCH_ASSOC);
+    // Check if the patient exists in the LocalPatient table
+    $check_local_patient = $gpsurgery_db->prepare("SELECT * FROM LocalPatient WHERE NHSNumber = :nhsNumber");
+    $check_local_patient->bindParam(':nhsNumber', $nhsNumber);
+    $check_local_patient->execute();
+    $local_patient = $check_local_patient->fetch(PDO::FETCH_ASSOC);
 
-        if ($local_patient) {
-            // New patient, please update the patient medical record.
-            echo json_encode(array('success' => false, 'message' => 'New patient, please update the patient medical record.'));
-        } else {
-            // The entered NHS number does not exist in the Gp Surgery.
-            echo json_encode(array('success' => false, 'message' => 'The entered NHS number does not exist in the Gp Surgery.'));
-        }
+    if ($vaccine_records && $local_patient) {
+        echo json_encode(array('success' => true, 'patients' => $vaccine_records, 'message' => ''));
+    } elseif ($local_patient) {
+        // New patient, please update the patient medical record.
+        echo json_encode(array('success' => false, 'message' => 'New patient, please update the patient medical record.'));
+    } else {
+        // The entered NHS number does not exist in the Gp Surgery.
+        echo json_encode(array('success' => false, 'message' => 'The entered NHS number does not exist in the Gp Surgery.'));
     }
 }
 ?>
