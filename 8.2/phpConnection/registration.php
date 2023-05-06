@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 $central_db = new PDO('sqlite:vaccines.db');
 
 $nhs_number = $_POST['nhsNumber'];
-$patient_email = $_POST['email'];
+$patient_email = $_POST['emailAddress'];
 $patient_password = $_POST['password'];
 $hashed_password = password_hash($patient_password, PASSWORD_DEFAULT); //Hash the password
 
