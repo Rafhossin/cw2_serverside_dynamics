@@ -31,6 +31,6 @@ if ($patient_record) {
     $insert_local_patient->bindParam(':patient_password', $hashed_password);
     $insert_local_patient->execute();
 
-    echo json_encode(array('success' => true));
+    echo json_encode(array('success' => true, 'NHSNumber' => $patient_record['NHSNumber']));
 }
 ?>
