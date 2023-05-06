@@ -5,12 +5,13 @@ $password = $_POST['password'];
 $email = $_POST['emailAddress'];
 $role = $_POST['role'];
 
+//Query depending on the role
 if ($role == "doctor") {
     $sql = "SELECT DoctorId, DoctorPassword FROM Doctor WHERE DoctorEmail = :email";
 } else if ($role == "receptionist") {
     $sql = "SELECT ReceptionistId, ReceptionistPassword FROM Receptionist WHERE ReceptionistEmail = :email";
 } else {
-    // Invalid role, return an error message
+    //Invalid role, return an error message
     echo json_encode(array('success' => false, 'message' => 'Invalid role'));
     exit;
 }
@@ -26,14 +27,14 @@ if ($result) {
     $id_result = ($role == "doctor") ? $result['DoctorId'] : $result['ReceptionistId'];
 
     if (password_verify($password, $stored_password)) {
-        // Return true with the doctor or receptionist ID
+        //Return true with the doctor or receptionist ID
         echo json_encode(array('success' => true, 'id' => $id_result));
     } else {
-        // Return false
+        //Return false
         echo json_encode(array('success' => false));
     }
 } else {
-    // Return false
+    //Return false
     echo json_encode(array('success' => false));
 }
 ?>
