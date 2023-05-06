@@ -5,12 +5,8 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Read the input data and decode the JSON
-$inputJSON = file_get_contents('php://input');
-$inputData = json_decode($inputJSON, true);
-
-// Get the NHSNumber from the input data
-$NHSNumber = isset($inputData['NHSNumber']) ? $inputData['NHSNumber'] : null;
+// Read the input data from $_POST
+$NHSNumber = isset($_POST['NHSNumber']) ? $_POST['NHSNumber'] : null;
 
 $response = ["message" => "", "appointments" => []];
 
