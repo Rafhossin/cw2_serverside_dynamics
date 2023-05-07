@@ -7,8 +7,12 @@ header("Access-Control-Allow-Headers: Content-Type");
 $central_db = new PDO('sqlite:vaccines.db');
 $gpsurgery_db = new PDO('sqlite:GpSurgery.db');
 
-$nhsNumber = $_POST["NHSNumber"];
+$nhsNumber = isset($_POST["NHSNumber"]) && !empty($_POST["NHSNumber"]) ? $_POST["NHSNumber"] : null;
 
+//$nhsNumber = $_POST["NHSNumber"];
+
+if ($nhsNumber) {
+    
 // Get patient records from MedicalRecord table in GpSurgery database
 $get_patient_records = $gpsurgery_db->prepare("SELECT * FROM MedicalRecord WHERE NHSNumber = :nhsNumber");
 $get_patient_records->bindParam(':nhsNumber', $nhsNumber);
@@ -39,5 +43,9 @@ if ($patient_records) {
         // The entered NHS number does not exist in the Gp Surgery.
         echo json_encode(array('success' => false, 'message' => 'The entered NHS number does not exist in the Gp Surgery.'));
     }
+}
+} else {
+    // Return an error message if any of the required input variables are empty or not set
+    echo json_encode(array('success' => false, 'message' => 'Invalid or incomplete input data.'));
 }
 ?>

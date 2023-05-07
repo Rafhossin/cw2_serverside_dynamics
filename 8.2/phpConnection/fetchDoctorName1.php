@@ -8,7 +8,7 @@ $response = ["message" => "", "fullName" => ""];
 
 if (!empty($DoctorId)) {
     try {
-        $database = new PDO('sqlite:GpSurgery.db');
+        $database = new SQLite3('GpSurgery.db');
     } catch (Exception $e) {
         http_response_code(500);
         $response["message"] = "Unable to connect to the database: " . $e->getMessage();
@@ -21,8 +21,8 @@ if (!empty($DoctorId)) {
 
     $stmt->bindParam(':DoctorId', $DoctorId);
 
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->execute();
+    $row = $result->fetchArray(SQLITE3_ASSOC);
 
     if ($row) {
         $response["fullName"] = $row['DoctorFirstName'] . ' ' . $row['DoctorSurName'];
