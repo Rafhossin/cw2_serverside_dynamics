@@ -1,8 +1,8 @@
-<!-- ----------------------
-------Author: w1820984
---------------------------->
-
 <?php
+//----------------------
+////Author: w1820984
+//----------------------
+
 header("Access-Control-Allow-Origin: *");
 $local_db = new PDO('sqlite:GpSurgery.db');
 $email = $_POST['emailAddress'];

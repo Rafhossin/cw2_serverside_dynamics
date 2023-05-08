@@ -1,8 +1,8 @@
-<!-- ----------------------
-------Author: w1820984
---------------------------->
-
 <?php
+//----------------------
+////Author: w1820984
+//----------------------
+
 header("Access-Control-Allow-Origin: *");
 
 $central_db = new PDO('sqlite:vaccines.db');
