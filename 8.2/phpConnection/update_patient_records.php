@@ -1,13 +1,14 @@
+
 <?php
+//w1857209 - Domingo Trimarchi
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-
+//$NHSNumber = '92233359811'; //  NHS Number for testing
 $NHSNumber = isset($_POST['NHSNumber']) ? $_POST['NHSNumber'] : '';
 $updateField = isset($_POST['updateField']) ? $_POST['updateField'] : '';
 $updateValue = isset($_POST['updateValue']) ? $_POST['updateValue'] : '';
-
 $response = ["success" => false, "message" => ""];
-
+//Conditional to check data
 if (!empty($NHSNumber) && !empty($updateField) && !empty($updateValue)) {
     try {
         $database = new SQLite3('GpSurgery.db');
@@ -17,7 +18,7 @@ if (!empty($NHSNumber) && !empty($updateField) && !empty($updateValue)) {
         echo json_encode($response);
         exit();
     }
-
+//Conditional to catch possible conection or missing data error
     if ($updateField === 'Password') {
         $hashed_password = password_hash($updateValue, PASSWORD_DEFAULT);
         $query = "UPDATE LocalPatient SET PatientPassword = :updateValue WHERE NHSNumber = :NHSNumber";
@@ -42,19 +43,19 @@ if (!empty($NHSNumber) && !empty($updateField) && !empty($updateValue)) {
 
     $stmt->bindParam(':NHSNumber', $NHSNumber);
     $stmt->bindParam(':updateValue', $updateValue);
-
+    // Execute the query
     $result = $stmt->execute();
-
+//Conditional to catch possible conection or missing data error
     if ($result) {
         $response["success"] = true;
         $response["message"] = "Patient records updated successfully";
     } else {
         http_response_code(400);
-        $response["message"] = "Unable to update patient records";
+        $response["message"] = "Error updating patient records";
     }
 } else {
     http_response_code(400);
-    $response["message"] = "Unable to update patient records. Data is incomplete.";
+    $response["message"] = "Error data is incomplete.";
 }
 
 echo json_encode($response);

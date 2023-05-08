@@ -1,11 +1,13 @@
+
 <?php
+//w1857209 - Domingo Trimarchi
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-
+//$NHSNumber = '92233359811'; //  NHS Number for testing
 $NHSNumber = isset($_GET['NHSNumber']) ? $_GET['NHSNumber'] : '';
 
 $response = ["message" => "", "patients" => []];
-
+//Conditional to check data
 if (!empty($NHSNumber)) {
     try {
         $database = new SQLite3('GpSurgery.db');
@@ -20,7 +22,7 @@ if (!empty($NHSNumber)) {
     $stmt = $database->prepare($query);
 
     $stmt->bindParam(':NHSNumber', $NHSNumber);
-
+    // Execute the query
     $result = $stmt->execute();
     $patients = [];
 
@@ -31,7 +33,7 @@ if (!empty($NHSNumber)) {
     $response["patients"] = $patients;
 } else {
     http_response_code(400);
-    $response["message"] = "Unable to fetch patients. Data is incomplete.";
+    $response["message"] = "Error data is incomplete.";
 }
 
 echo json_encode($response);
