@@ -1,5 +1,11 @@
+
+
 <?php
+//Author **** w1785478 ****
+
 $local_db = new PDO('sqlite:GpSurgery.db');
+
+// The login information of doctors are given below. 
 
 //http://localhost:8005/insertDrDetails.php
 

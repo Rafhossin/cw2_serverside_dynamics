@@ -1,15 +1,20 @@
 <?php
+   //Author **** w1785478 ****
+// This script allows the user to fetch patient medical record by providing their NHS number in the request.
+
+// Set appropriate headers to allow CORS and specify JSON content-type
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
+// Try to create a new PDO object for connecting to the databases
 $central_db = new PDO('sqlite:vaccines.db');
 $gpsurgery_db = new PDO('sqlite:GpSurgery.db');
 
 $nhsNumber = isset($_POST["NHSNumber"]) && !empty($_POST["NHSNumber"]) ? $_POST["NHSNumber"] : null;
 
-//$nhsNumber = $_POST["NHSNumber"];
+
 
 if ($nhsNumber) {
     
