@@ -55,7 +55,7 @@ if (validateDate($dateEntered)) {
     }
 } else {
     // Date is not valid
-    echo json_encode(array('success' => false, 'message' => 'Invalid date.Please select the correct The date, must be in the format YYYY-MM-DD.'));
+    echo json_encode(array('success' => false, 'message' => 'Invalid date.Please select the correct date, must be in the format YYYY-MM-DD.'));
     exit();
 }
 
@@ -78,7 +78,7 @@ $existing_record_count = $check_existing_record->fetchColumn();
 
 // If the appointment date already exists in the MedicalRecord table, return an error message
 if ($existing_record_count > 0) {
-    echo json_encode(array('success' => false, 'message' => 'Appointment date already exists in the MedicalRecord table.'));
+    echo json_encode(array('success' => false, 'message' => 'The MedicalRecord of the patient has already been updated.'));
 } else {
 
   // Prepare a SQL query to insert the vaccination data into the MedicalRecord table
