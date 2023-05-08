@@ -1,4 +1,8 @@
 <?php
+//----------------------
+////Author: w1822557
+//----------------------
+
 header("Access-Control-Allow-Origin: *");
 $local_db = new PDO('sqlite:GpSurgery.db');
 
